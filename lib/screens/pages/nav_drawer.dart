@@ -109,7 +109,7 @@ class NavDrawerWidget extends StatelessWidget {
                   )),
               title: Transform.translate(
                 offset: Offset(-28, 0),
-                child: Text("Cart",
+                child: Text("My Cart",
                     style: TextStyle(
                         color: Colors.grey,
                         fontSize: 14,

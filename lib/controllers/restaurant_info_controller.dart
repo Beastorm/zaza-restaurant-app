@@ -68,6 +68,7 @@ class RestaurantInfoController extends GetxController {
     print(info[0].day);
     getRestaurantOpeningTime();
     getRestaurantClosingTime();
+    isRestaurantOpen();
   }
 
   // fetching today date time from list of restaurant timing
@@ -105,6 +106,8 @@ class RestaurantInfoController extends GetxController {
     var resCloseTime = convertStringToDouble(getRestaurantClosingTime());
     if (today >= resOpenTime && today <= resCloseTime) {
       isRestaurantOpenStatus(true);
+    } else {
+      isRestaurantOpenStatus(false);
     }
   }
 
@@ -114,9 +117,9 @@ class RestaurantInfoController extends GetxController {
     double.parse(parts.join("."));
 
     if (double.parse(parts.join(".")) > 12.0) {
-      return " am";
-    } else {
       return " pm";
+    } else {
+      return " am";
     }
   }
 
