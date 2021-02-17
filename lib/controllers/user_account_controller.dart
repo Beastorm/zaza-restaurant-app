@@ -58,18 +58,19 @@ class UserProfileController extends GetxController {
     Get.snackbar("Saved!", "", snackPosition: SnackPosition.BOTTOM);
   }
 
-  void uploadImage() async {
+  void requestForImageUpload() async {
     final picker = ImagePicker();
     File _imageFile;
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
     _imageFile = File(pickedFile.path);
     file.value = _imageFile;
     isFileSelected(true);
+    editUserImage(file.value);
     update();
   }
 
   addValueToForm(String add1, String zip) {
-    firstLineController.text=add1;
-    pinController.text=zip;
+    firstLineController.text = add1;
+    pinController.text = zip;
   }
 }

@@ -112,14 +112,14 @@ class _UserAccountScreenWidgetState extends State<UserAccountScreenWidget> {
                                       ),
                                     )
                                   : GestureDetector(
-                                      onTap: controller.uploadImage,
+                                      onTap: controller.requestForImageUpload,
                                       child: CircleAvatar(
                                         radius: 56,
                                         backgroundColor: Colors.white,
                                         child: controller.isFileSelected.value
                                             ? ClipRRect(
                                                 borderRadius:
-                                                    BorderRadius.circular(56.0),
+                                                    BorderRadius.circular(100),
                                                 child: Image.file(
                                                   controller.file.value,
                                                   fit: BoxFit.cover,

@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:global_configuration/global_configuration.dart';
 import 'package:http/http.dart' as http;
-import 'package:zaza/models/all_products_with_category.dart';
+import '../models/all_products_with_category.dart';
 
 Future<List<Datum>> getProductWithCategory() async {
   final String url =
