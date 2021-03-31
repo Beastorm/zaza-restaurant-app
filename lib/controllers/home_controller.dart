@@ -1,14 +1,14 @@
 import 'package:get/get.dart';
-import 'package:zaza/models/all_products_with_category.dart';
-import 'package:zaza/models/banner_model.dart';
-import 'package:zaza/models/category_model.dart';
-import 'package:zaza/models/products_model.dart';
-import 'package:zaza/repo/all_product_repo.dart';
-import 'package:zaza/repo/banners_repo.dart';
 
-import 'package:zaza/repo/category_repo.dart';
-import 'package:zaza/repo/new_product_repo.dart';
-import 'package:zaza/models/new_product_model.dart';
+import '../models/all_products_with_category.dart';
+import '../models/banner_model.dart';
+import '../models/category_model.dart';
+import '../models/new_product_model.dart';
+import '../models/products_model.dart';
+import '../repo/all_product_repo.dart';
+import '../repo/banners_repo.dart';
+import '../repo/category_repo.dart';
+import '../repo/new_product_repo.dart';
 
 class HomeController extends GetxController {
   var categoryList = List<CategoryItem>().obs;

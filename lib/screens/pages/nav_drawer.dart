@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:zaza/contants.dart';
-import 'package:zaza/screens/account/account_screen.dart';
-import 'package:zaza/screens/cart/cart_screen.dart';
+import 'package:zaza/screens/orders/orders_screen.dart';
+import 'package:zaza/screens/privacy_policy/privacy_policy_screen.dart';
+
+import '../../contants.dart';
+import '../account/account_screen.dart';
+import '../cart/cart_screen.dart';
 
 // ignore: must_be_immutable
 class NavDrawerWidget extends StatelessWidget {
@@ -44,7 +47,7 @@ class NavDrawerWidget extends StatelessWidget {
               onTap: () {
                 if (pref.hasData("isLogin")) {
                   Get.to(UserAccountScreenWidget());
-                  scaffoldKey.currentState.closeDrawer();
+                  //  scaffoldKey.currentState.closeDrawer();
                 } else
                   Get.offAllNamed("/Login");
               },
@@ -62,6 +65,13 @@ class NavDrawerWidget extends StatelessWidget {
               ),
             ),
             ListTile(
+              onTap: () {
+                if (pref.hasData("isLogin")) {
+                  Get.to(OrdersScreenWidget());
+                  // scaffoldKey.currentState.closeDrawer();
+                } else
+                  Get.offAllNamed("/Login");
+              },
               leading: SvgPicture.asset("assets/images/order.svg"),
               title: Transform.translate(
                 offset: Offset(-28, 0),
@@ -76,7 +86,7 @@ class NavDrawerWidget extends StatelessWidget {
               onTap: () {
                 if (pref.hasData("isLogin")) {
                   Get.toNamed("/Fav");
-                  scaffoldKey.currentState.closeDrawer();
+                  // scaffoldKey.currentState.closeDrawer();
                 } else
                   Get.offAllNamed("/Login");
               },
@@ -97,7 +107,6 @@ class NavDrawerWidget extends StatelessWidget {
               onTap: () {
                 if (pref.hasData("isLogin")) {
                   Get.to(CartScreenWidget());
-                  scaffoldKey.currentState.closeDrawer();
                 } else
                   Get.offAllNamed("/Login");
               },
@@ -158,6 +167,9 @@ class NavDrawerWidget extends StatelessWidget {
               ),
             ),
             ListTile(
+              onTap: () {
+                Get.to(PrivacyPolicyScreenWidget());
+              },
               leading: Icon(Icons.policy, color: Color(0xffff7474)),
               title: Transform.translate(
                 offset: Offset(-28, 0),

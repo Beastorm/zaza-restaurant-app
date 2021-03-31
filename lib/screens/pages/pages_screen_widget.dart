@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 import '../favourite/favourite_screen.dart';
 import '../home/home_screen.dart';
 import '../menu/menu_screen.dart';
@@ -25,6 +26,7 @@ class PagesScreenWidget extends StatefulWidget {
 
 class _PagesScreenWidgetState extends State<PagesScreenWidget> {
   final pref = GetStorage();
+
   initState() {
     super.initState();
     _selectTab(widget.currentTab);
@@ -38,7 +40,9 @@ class _PagesScreenWidgetState extends State<PagesScreenWidget> {
           widget.currentPage = MenuScreenWidget();
           break;
         case 3:
-          widget.currentPage = OrdersScreenWidget();
+          widget.currentPage = pref.hasData("isLogin")
+              ? OrdersScreenWidget()
+              : NotLoginScreenWidget();
           break;
         case 0:
           widget.currentPage =

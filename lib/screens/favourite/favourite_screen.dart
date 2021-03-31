@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:zaza/contants.dart';
-import 'package:zaza/controllers/favourite%20_product_controller.dart';
-import 'package:zaza/screens/product_details/product_details_screen.dart';
+import '../../contants.dart';
+import '../../controllers/favourite%20_product_controller.dart';
+import '../product_details/product_details_screen.dart';
 
 class FavouriteScreenWidget extends StatefulWidget {
   FavouriteScreenWidget({Key key}) : super(key: key);
@@ -15,6 +15,7 @@ class FavouriteScreenWidget extends StatefulWidget {
 class _FavouriteScreenWidgetState extends State<FavouriteScreenWidget> {
   final FavouriteController favouriteController =
       Get.put(FavouriteController());
+
 
   @override
   Widget build(BuildContext context) {

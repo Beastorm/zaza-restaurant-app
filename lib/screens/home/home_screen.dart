@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import '../search_items/search_item.dart';
 
 import '../../contants.dart';
 import '../../controllers/home_controller.dart';
@@ -50,38 +51,43 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                             widget.parentScaffoldKey.currentState.openDrawer();
                           },
                         ),
-                        Container(
-                          height: 48.0,
-                          child: Row(
-                            children: [
-                              SizedBox(
-                                width: 16,
-                              ),
-                              Text(
-                                "Search Foods",
-                                style: TextStyle(color: Colors.grey),
-                              ),
-                              SizedBox(
-                                width: 48,
-                              ),
-                              CircleAvatar(
-                                backgroundColor: secondaryColor,
-                                child: Container(
-                                  child: Icon(
-                                    Icons.search,
-                                    color: Colors.white,
+                        GestureDetector(
+                          onTap: () {
+                            Get.to(SearchFoodItemScreenWidget());
+                           },
+                          child: Container(
+                            height: 48.0,
+                            child: Row(
+                              children: [
+                                SizedBox(
+                                  width: 16,
+                                ),
+                                Text(
+                                  "Search Foods",
+                                  style: TextStyle(color: Colors.grey),
+                                ),
+                                SizedBox(
+                                  width: 48,
+                                ),
+                                CircleAvatar(
+                                  backgroundColor: secondaryColor,
+                                  child: Container(
+                                    child: Icon(
+                                      Icons.search,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              SizedBox(
-                                width: 3,
-                              ),
-                            ],
+                                SizedBox(
+                                  width: 3,
+                                ),
+                              ],
+                            ),
+                            decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(100)),
+                                border: Border.all(color: secondaryColor)),
                           ),
-                          decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(100)),
-                              border: Border.all(color: secondaryColor)),
                         ),
                         Spacer(),
                         GestureDetector(
@@ -178,14 +184,14 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                       enlargeCenterPage: true,
                       scrollDirection: Axis.horizontal,
                     ),
-                    itemCount: controller.bannerList.length,
+                    itemCount: controller.bannerList?.length,
                     itemBuilder: (context, index) {
-                      var sliderItem = controller.bannerList[index];
+                      var sliderItem = controller?.bannerList[index];
                       return Container(
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(12),
                           child: CachedNetworkImage(
-                            imageUrl: sliderItem.image,
+                            imageUrl: sliderItem?.image,
                             height: 180,
                             fit: BoxFit.fill,
                             placeholder: (context, url) => Image.asset(

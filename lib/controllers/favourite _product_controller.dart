@@ -1,7 +1,8 @@
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:zaza/models/fav_model.dart';
-import 'package:zaza/repo/fav_repo.dart';
+
+import '../models/fav_model.dart';
+import '../repo/fav_repo.dart';
 
 class FavouriteController extends GetxController {
   var favouriteList = List<Datum>().obs;
@@ -9,30 +10,28 @@ class FavouriteController extends GetxController {
   @override
   void onInit() {
     // called immediately after the widget is allocated memory
-    getAllFavList();
-
+    requestForAllFavList();
     super.onInit();
   }
 
-  getAllFavList() async {
+  requestForAllFavList() async {
     final pref = GetStorage();
     if (pref.hasData("userId")) {
       List<Datum> favList = await getFavList(pref.read("userId"));
-
-      print(" 444444444444444444444444444444444444444444444");
-      print(favouriteList.isBlank);
-      print(favList);
-      print(" 444444444444444444444444444444444444444444444");
+      print(".........");
+      print(favouriteList?.length);
+      print(favouriteList);
+      print(".........");
       if (favList != null) {
         favouriteList.assignAll(favList);
-      } else {
+      } else if (favList.length == 0) {
         favouriteList.clear();
-        // Get.defaultDialog(
-        //   title: "No Data",
-        //   barrierDismissible: false,
-        //   middleText: "No food item in your favourite List",
-        //   radius: 4.0,
-        // );
+        Get.defaultDialog(
+          title: "Empty",
+          barrierDismissible: true,
+          middleText: "No food item in your favourite List",
+          radius: 4.0,
+        );
       }
     }
   }
@@ -44,7 +43,7 @@ class FavouriteController extends GetxController {
     if (pref.hasData("userId")) {
       var status = await addToFav(productId, pref.read<String>("userId"));
       if (status) {
-        getAllFavList();
+        requestForAllFavList();
         Get.snackbar("Added In Favourite", "",
             snackPosition: SnackPosition.BOTTOM);
       } else
@@ -60,7 +59,7 @@ class FavouriteController extends GetxController {
     if (pref.hasData("userId")) {
       var status = await delFromFav(tableId);
       if (status) {
-        getAllFavList();
+        requestForAllFavList();
         favouriteList.refresh();
         Get.snackbar("Deleted From Favourite", "",
             snackPosition: SnackPosition.BOTTOM);

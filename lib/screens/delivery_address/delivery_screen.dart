@@ -14,6 +14,7 @@ class DeliveryScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          titleSpacing: 0.0,
           title: Text(
             "Address List",
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.w400),

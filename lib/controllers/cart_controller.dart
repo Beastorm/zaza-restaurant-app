@@ -21,7 +21,6 @@ class CartController extends GetxController {
     gettingUserInfo();
     getAllCartItem();
     zipController = TextEditingController();
-
     super.onInit();
   }
 
@@ -38,12 +37,12 @@ class CartController extends GetxController {
         cartList.assignAll(cartProducts);
       } else {
         cartList.clear();
-        // Get.defaultDialog(
-        //   title: "No Data",
-        //   barrierDismissible: true,
-        //   middleText: "No food item in your Cart List",
-        //   radius: 4.0,
-        // );
+        Get.defaultDialog(
+          title: "No Data",
+          barrierDismissible: true,
+          middleText: "No food item in your Cart List",
+          radius: 4.0,
+        );
       }
     }
   }

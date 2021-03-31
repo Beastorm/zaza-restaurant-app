@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:zaza/screens/order_and_payment_methods/order_and_payment_methods_screen.dart';
 
 import '../../contants.dart';
 import '../../controllers/cart_controller.dart';
@@ -25,7 +26,7 @@ class _PickUpOrDeliveryScreenWidgetState
         () => controller.cartList.length != 0
             ? GestureDetector(
                 onTap: () {
-                  //  Get.to(PickUpOrDeliveryScreenWidget());
+                  Get.to(OrderAndPaymentMethodScreenWidget());
                 },
                 child: Container(
                   alignment: Alignment.center,
@@ -274,7 +275,6 @@ class _PickUpOrDeliveryScreenWidgetState
                       ),
                     ),
                   ),
-
                 ],
               ),
               decoration: BoxDecoration(

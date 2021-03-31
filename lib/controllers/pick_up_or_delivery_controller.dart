@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
 
 class PickUpOrDeliveryController extends GetxController {
-  var isPickUpSelected = false.obs;
+  var isPickUpSelected = true.obs;
   var isDeliverySelected = false.obs;
-  var bottomTxt = "".obs;
+  var bottomTxt = "Go For Payment".obs;
 
   togglePickSelection(bool selection) {
     print(selection);

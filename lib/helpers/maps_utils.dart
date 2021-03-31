@@ -7,7 +7,8 @@ import 'package:location/location.dart';
 Future<String> getAddressName(LocationData location, String apiKey) async {
   try {
     var endPoint =
-        'https://maps.googleapis.com/maps/api/geocode/json?latlng=${location?.latitude},${location?.longitude}&key=$apiKey';
+        'https://maps.googleapis.com/maps/api/geocode/json?latlng=${location
+        ?.latitude},${location?.longitude}&key=$apiKey';
     var response = jsonDecode((await http.post(
       endPoint,
     ))
@@ -53,7 +54,11 @@ String getPostalCode(String address) {
   var list = address.split(", ");
   var pinInfo = list.elementAt(list.length - 2);
 
-  print(pinInfo.split(" ").last);
+  print(pinInfo
+      .split(" ")
+      .last);
 
-  return pinInfo.split(" ").last;
+  return pinInfo
+      .split(" ")
+      .last;
 }

@@ -40,15 +40,16 @@ deleteUserAddress(String tableId) async {
   await client.post(url, body: msg);
 }
 
-updateUserInfo(String tableId, String email, String mobile) async {
+updateUserInfo(String userId, String email, String mobile, String type) async {
   final String url =
       '${GlobalConfiguration().getValue('base_url')}myprofileedit';
-  final msg = jsonEncode({"id": tableId, "email": email, "mobile": mobile});
+  final msg = jsonEncode(
+      {"id": userId, "email": email, "mobile": mobile, "type": type});
   var client = http.Client();
   await client.post(url, body: msg);
 }
 
-editUserImage(File imageFile) async {
+editUserImage(File imageFile, String userId) async {
   final String url =
       '${GlobalConfiguration().getValue('base_url')}myprofilepictureedit';
 
@@ -59,10 +60,10 @@ editUserImage(File imageFile) async {
   var uri = Uri.parse(url);
 
   var request = new http.MultipartRequest("POST", uri);
-  var multipartFile = new http.MultipartFile('file', stream, length,
+  request.fields['id'] = userId;
+  var multipartFile = new http.MultipartFile('item_image', stream, length,
       filename: basename(imageFile.path));
   //contentType: new MediaType('image', 'png'));
-
   request.files.add(multipartFile);
   var response = await request.send();
   print(response.statusCode);
