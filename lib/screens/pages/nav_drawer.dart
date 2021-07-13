@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:zaza/screens/orders/orders_screen.dart';
 import 'package:zaza/screens/privacy_policy/privacy_policy_screen.dart';
+import 'package:zaza/screens/contact_us/contact.dart';
 
 import '../../contants.dart';
 import '../account/account_screen.dart';
@@ -13,6 +16,7 @@ import '../cart/cart_screen.dart';
 class NavDrawerWidget extends StatelessWidget {
   final pref = GetStorage();
   var scaffoldKey;
+  var packageName = "com.zaza";
 
   NavDrawerWidget({this.scaffoldKey, Key key}) : super(key: key);
 
@@ -133,6 +137,11 @@ class NavDrawerWidget extends StatelessWidget {
               ),
             ),
             ListTile(
+              onTap: () {
+                Get.to(ContactScreen(
+                  title: "Contact Us",
+                ));
+              },
               leading: SvgPicture.asset("assets/images/ic_call_24px.svg"),
               title: Transform.translate(
                 offset: Offset(-28, 0),
@@ -144,6 +153,17 @@ class NavDrawerWidget extends StatelessWidget {
               ),
             ),
             ListTile(
+              onTap: () {
+                try {
+                  launch("market://details?id=" + packageName);
+                } on PlatformException catch (e) {
+                  launch("https://play.google.com/store/apps/details?id=" +
+                      packageName);
+                } finally {
+                  launch("https://play.google.com/store/apps/details?id=" +
+                      packageName);
+                }
+              },
               leading: SvgPicture.asset("assets/images/ic_star_24px.svg"),
               title: Transform.translate(
                 offset: Offset(-28, 0),
@@ -155,6 +175,11 @@ class NavDrawerWidget extends StatelessWidget {
               ),
             ),
             ListTile(
+              onTap: () {
+                Get.to(ContactScreen(
+                  title: "Get Help",
+                ));
+              },
               leading:
                   SvgPicture.asset("assets/images/ic_help_outline_24px.svg"),
               title: Transform.translate(
@@ -173,7 +198,7 @@ class NavDrawerWidget extends StatelessWidget {
               leading: Icon(Icons.policy, color: Color(0xffff7474)),
               title: Transform.translate(
                 offset: Offset(-28, 0),
-                child: Text("Privacy Policy",
+                child: Text("Terms and Conditions*",
                     style: TextStyle(
                         color: Colors.grey,
                         fontSize: 14,

@@ -1,13 +1,17 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:zaza/models/products_model.dart';
 import 'package:zaza/repo/products_repo.dart';
 
-class ProductController extends GetxController {
+class ProductDetailsController extends GetxController {
+  TextEditingController noteController = TextEditingController();
+
   var productList = List<ProductItem>().obs;
   var isLoading = true.obs;
 
+  var currentComboProduct = "0".obs;
 
-  void getProducts(String id) async {
+  getProducts(String id) async {
     productList.clear();
     isLoading(true);
     try {
@@ -20,7 +24,4 @@ class ProductController extends GetxController {
       isLoading(false);
     }
   }
-
-
-
 }

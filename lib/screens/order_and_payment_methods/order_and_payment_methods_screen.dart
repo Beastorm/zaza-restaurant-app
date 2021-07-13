@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+
 import 'package:zaza/controllers/cart_controller.dart';
+import 'package:zaza/controllers/order_process_controller.dart';
 import 'package:zaza/screens/card_payment/by_card_payment.dart';
+import 'package:zaza/screens/success_order/success_order_screen.dart';
 
 import '../../contants.dart';
 
 class OrderAndPaymentMethodScreenWidget extends StatefulWidget {
+  final String serviceType;
+  OrderAndPaymentMethodScreenWidget({
+    Key key,
+    this.serviceType,
+  }) : super(key: key);
+
   @override
   _OrderAndPaymentMethodScreenWidgetState createState() =>
       _OrderAndPaymentMethodScreenWidgetState();
@@ -15,6 +24,9 @@ class OrderAndPaymentMethodScreenWidget extends StatefulWidget {
 class _OrderAndPaymentMethodScreenWidgetState
     extends State<OrderAndPaymentMethodScreenWidget> {
   final CartController controller = Get.find<CartController>();
+
+  final OrderProcessController _orderProcessController =
+      Get.put(OrderProcessController());
   DateTime selectedDate = DateTime.now();
   TextEditingController _dateController = TextEditingController();
   TextEditingController _timeController = TextEditingController();
@@ -82,121 +94,126 @@ class _OrderAndPaymentMethodScreenWidgetState
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(
-                left: 16.0,
-                top: 32.0,
-              ),
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: Text(
-                  "At What Time?",
-                  style: TextStyle(
-                    color: Colors.black54,
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ),
-            ),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 12.0, vertical: 16.0),
-              child: Container(
-                padding: EdgeInsets.all(12.0),
-                width: double.infinity,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        _selectDate(context);
-                      },
-                      child: Container(
-                        width: 140,
-                        height: 42,
-                        margin: EdgeInsets.only(top: 12),
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(8.0),
-                          ),
-                        ),
-                        child: TextFormField(
-                          style: TextStyle(fontSize: 16.0),
-                          textAlign: TextAlign.center,
-                          enabled: false,
-                          keyboardType: TextInputType.text,
-                          controller: _dateController,
-                          onSaved: (String val) {
-                            //_setDate = val;
-                          },
-                          decoration: InputDecoration(
-                            disabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide.none),
-                            // labelText: 'Time',
-                            contentPadding: EdgeInsets.only(top: 8.0),
-                            prefixIcon: Icon(Icons.calendar_today_rounded),
-                          ),
+            widget.serviceType == "Pick"
+                ? Padding(
+                    padding: const EdgeInsets.only(
+                      left: 16.0,
+                      top: 32.0,
+                    ),
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        "At What Time?",
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.w400,
                         ),
                       ),
                     ),
-                    Spacer(),
-                    InkWell(
-                      onTap: () {
-                        _selectTime(context);
-                      },
-                      child: Container(
-                        margin: EdgeInsets.only(top: 12),
-                        width: 140,
-                        height: 42,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(8.0),
-                          ),
-                        ),
-                        child: TextFormField(
-                          controller: _timeController,
-                          style: TextStyle(fontSize: 16.0),
-                          textAlign: TextAlign.center,
-                          onSaved: (String val) {
-                            //  _setTime = val;
-                          },
-                          enabled: false,
-                          keyboardType: TextInputType.text,
-                          decoration: InputDecoration(
-                            disabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide.none),
-                            // labelText: 'Time',
-                            contentPadding: EdgeInsets.only(
-                              top: 8.0,
+                  )
+                : SizedBox(),
+            widget.serviceType == "Pick"
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12.0, vertical: 16.0),
+                    child: Container(
+                      padding: EdgeInsets.all(12.0),
+                      width: double.infinity,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              _selectDate(context);
+                            },
+                            child: Container(
+                              width: 140,
+                              height: 42,
+                              margin: EdgeInsets.only(top: 12),
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(8.0),
+                                ),
+                              ),
+                              child: TextFormField(
+                                style: TextStyle(fontSize: 16.0),
+                                textAlign: TextAlign.center,
+                                enabled: false,
+                                keyboardType: TextInputType.text,
+                                controller: _dateController,
+                                onSaved: (String val) {
+                                  //_setDate = val;
+                                },
+                                decoration: InputDecoration(
+                                  disabledBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide.none),
+                                  // labelText: 'Time',
+                                  contentPadding: EdgeInsets.only(top: 8.0),
+                                  prefixIcon:
+                                      Icon(Icons.calendar_today_rounded),
+                                ),
+                              ),
                             ),
-                            prefixIcon: Icon(Icons.access_time),
                           ),
+                          Spacer(),
+                          InkWell(
+                            onTap: () {
+                              _selectTime(context);
+                            },
+                            child: Container(
+                              margin: EdgeInsets.only(top: 12),
+                              width: 140,
+                              height: 42,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(8.0),
+                                ),
+                              ),
+                              child: TextFormField(
+                                controller: _timeController,
+                                style: TextStyle(fontSize: 16.0),
+                                textAlign: TextAlign.center,
+                                onSaved: (String val) {
+                                  //  _setTime = val;
+                                },
+                                enabled: false,
+                                keyboardType: TextInputType.text,
+                                decoration: InputDecoration(
+                                  disabledBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide.none),
+                                  // labelText: 'Time',
+                                  contentPadding: EdgeInsets.only(
+                                    top: 8.0,
+                                  ),
+                                  prefixIcon: Icon(Icons.access_time),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withAlpha(210),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(8.0),
                         ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.3),
+                            spreadRadius: 1,
+                            blurRadius: 2,
+                            offset: Offset(0, 0), // changes position of shadow
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.white.withAlpha(210),
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(8.0),
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.3),
-                      spreadRadius: 1,
-                      blurRadius: 2,
-                      offset: Offset(0, 0), // changes position of shadow
-                    ),
-                  ],
-                ),
-              ),
-            ),
+                  )
+                : SizedBox(),
             Padding(
               padding: const EdgeInsets.only(
                 left: 16.0,
@@ -246,7 +263,7 @@ class _OrderAndPaymentMethodScreenWidgetState
                       ),
                     ),
                     SizedBox(
-                      width: 12.0,
+                      width: 8.0,
                     ),
                     Expanded(
                       child: Container(
@@ -256,10 +273,45 @@ class _OrderAndPaymentMethodScreenWidgetState
                             color: Colors.white,
                           ),
                           elevation: 0.0,
-                          onPressed: () {},
+                          onPressed: () async {
+                            if (widget.serviceType == "Pick") {
+                              await _orderProcessController.requestForSavePayload(
+                                  controller.getCartProductIdInStrigFormat(),
+                                  controller.getCartParodutQtyInStringFormat(),
+                                  "dummy",
+                                  controller.totalBillOfCart(),
+                                  "Date: ${_dateController.text} and Time: ${formatDate(DateTime(selectedDate.year, selectedDate.month, selectedDate.day, selectedTime.hour, selectedTime.minute), ["hh", ':', "nn", " ", "am"]).toString()}",
+                                  "1",
+                                  _orderProcessController.generateTxnId(),
+                                  "Cod",
+                                  "Cash",
+                                  "2",
+                                  " ");
+
+                                  // print()
+                            } else {
+                              await _orderProcessController
+                                  .requestForSavePayload(
+                                      controller
+                                          .getCartProductIdInStrigFormat(),
+                                      controller
+                                          .getCartParodutQtyInStringFormat(),
+                                      "dummy",
+                                      controller.totalBillOfCart(),
+                                      controller.shippingAddress.value,
+                                      "1",
+                                      _orderProcessController.generateTxnId(),
+                                      "Cod",
+                                      "Cash",
+                                      "1",
+                                      controller.zipController.text);
+                            }
+                          },
                           color: accentColor,
                           label: Text(
-                            "By COD",
+                            widget.serviceType == "Pick"
+                                ? "Pay at Counter"
+                                : "By COD",
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w400,

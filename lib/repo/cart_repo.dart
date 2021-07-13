@@ -24,7 +24,7 @@ Future<List<Datum>> getCartList(String userId) async {
 }
 
 Future<bool> addToCart(
-    String productId, String userId, String qty, String cost) async {
+    String productId, String userId, String qty, String cost,String preference) async {
   final String url = '${GlobalConfiguration().getValue('base_url')}cart';
   final msg = jsonEncode(
       {"user": userId, "product": productId, "qty": qty, "price": cost});

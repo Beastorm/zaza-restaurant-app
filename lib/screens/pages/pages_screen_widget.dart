@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:zaza/controllers/app_info_controller.dart';
 
 import '../favourite/favourite_screen.dart';
 import '../home/home_screen.dart';
@@ -26,6 +28,7 @@ class PagesScreenWidget extends StatefulWidget {
 
 class _PagesScreenWidgetState extends State<PagesScreenWidget> {
   final pref = GetStorage();
+  final AppInfoController _appInfoController = Get.find<AppInfoController>();
 
   initState() {
     super.initState();
@@ -64,12 +67,12 @@ class _PagesScreenWidgetState extends State<PagesScreenWidget> {
       floatingActionButton: new FloatingActionButton(
         backgroundColor: Colors.green,
         onPressed: () async {
-          const url = "tel:1234567890";
+          var url = "tel:${_appInfoController.restaurantMobileNo.value}";
 
           if (await canLaunch(url)) {
             await launch(url);
           } else {
-            throw 'Could not launch $url';
+            throw 'Could not launch ';
           }
         },
         child: const Icon(

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:http/http.dart' as http;
 import 'package:zaza/models/fav_model.dart';
+import 'package:zaza/models/response_model.dart';
 import 'package:zaza/models/sign_up_response_model.dart';
 
 Future<List<Datum>> getFavList(String userId) async {
@@ -35,9 +36,6 @@ Future<bool> addToFav(String productId, String userId) async {
   var response = await client.post(url, body: msg);
   print(response.statusCode);
   if (response.statusCode == 200) {
-    print("...............");
-    // print(response.body);
-    print("...............");
     return SignUpResponse.fromJson(json.decode(response.body)).status;
   } else
     return false;
@@ -49,9 +47,18 @@ Future<bool> delFromFav(String tableId) async {
   var client = http.Client();
   var response = await client.post(url, body: msg);
   print(response.statusCode);
-  if (response.statusCode == 200) {
-    print("...............");
-    return SignUpResponse.fromJson(json.decode(response.body)).status;
-  } else
-    return null;
+  try {
+    if (response.statusCode == 200) {
+      var message = responseModelFromJson(response.body).message;
+
+      if (message != "No Data Found.") {
+        print("...............");
+        return true;
+      } else
+        return false;
+    } else
+      return false;
+  } on Exception catch (e) {
+    return false;
+  }
 }

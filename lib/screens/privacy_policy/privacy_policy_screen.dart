@@ -3,9 +3,10 @@ import 'package:get/get.dart';
 import 'package:zaza/controllers/app_info_controller.dart';
 
 import '../../contants.dart';
+import 'package:flutter_html/flutter_html.dart';
 
 class PrivacyPolicyScreenWidget extends StatelessWidget {
-  final AppInfoController _appInfoController = Get.put(AppInfoController());
+  final AppInfoController _appInfoController = Get.find<AppInfoController>();
 
   @override
   Widget build(BuildContext context) {
@@ -38,9 +39,11 @@ class PrivacyPolicyScreenWidget extends StatelessWidget {
             ),
             Container(
               padding: EdgeInsets.all(16.0),
-              child: GetX<AppInfoController>(builder: (controller) {
-                return Text(controller.privacyPolicy.value);
-              }),
+              child: Obx(
+                () => Html(
+                  data: _appInfoController.privacyPolicy.value,
+                ),
+              ),
             ),
           ],
         ),

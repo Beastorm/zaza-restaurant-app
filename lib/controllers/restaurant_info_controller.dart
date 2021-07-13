@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../models/postal_code_model.dart';
 import '../models/restaurant_timing_model.dart';
 import '../repo/restaurant_info_repo.dart';
@@ -65,7 +64,7 @@ class RestaurantInfoController extends GetxController {
   requestForRestaurantInfo() async {
     var info = await getRestaurantInfo();
     timingList.assignAll(info);
-    print(info[0].day);
+
     getRestaurantOpeningTime();
     getRestaurantClosingTime();
     isRestaurantOpen();
@@ -84,7 +83,7 @@ class RestaurantInfoController extends GetxController {
 
     todayOpenTime.value =
         "${time.open.substring(0, 5)}${checkForAmOrPmOfRestaurant(time.open.substring(0, 5))}";
-    print(todayOpenTime.value);
+    // print(todayOpenTime.value);
     return time.open.substring(0, 5);
   }
 
@@ -93,22 +92,39 @@ class RestaurantInfoController extends GetxController {
     todayCloseTime.value =
         "${time.close.substring(0, 5)}${checkForAmOrPmOfRestaurant(time.close.substring(0, 5))}";
 
+    // print(todayCloseTime.value);
     return time.close.substring(0, 5);
   }
 
   isRestaurantOpen() {
     var list = DateTime.now()..toString();
+
+    print(list);
     var hr = list.hour.toString();
     var min = list.minute;
     var time = '$hr.$min';
+
+    print(hr);
+    print(min);
+
     var today = double.parse(time);
+
+    print(today);
+
     var resOpenTime = convertStringToDouble(getRestaurantOpeningTime());
     var resCloseTime = convertStringToDouble(getRestaurantClosingTime());
-    if (today >= resOpenTime && today <= resCloseTime) {
+
+    print("Today restaurant opening time ${resOpenTime}");
+    print("Today restaurant closing time ${resCloseTime}");
+    // print()
+
+    if (resOpenTime <= today && today <= resCloseTime) {
       isRestaurantOpenStatus(true);
     } else {
       isRestaurantOpenStatus(false);
     }
+
+    print("Restaurant is open" + isRestaurantOpenStatus.value.toString());
   }
 
   String checkForAmOrPmOfRestaurant(String time) {

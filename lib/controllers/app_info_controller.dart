@@ -3,17 +3,20 @@ import 'package:zaza/repo/app_info_repo.dart';
 
 class AppInfoController extends GetxController {
   var privacyPolicy = "".obs;
+  var restaurantEmail = "".obs;
+  var restaurantMobileNo = "".obs;
 
   @override
   void onInit() {
-    // called immediately after the widget is allocated memory
     requestForAppInfo();
     super.onInit();
   }
 
   requestForAppInfo() async {
     var data = await getAppInfo();
-    privacyPolicy.value = data.privacyPolicy;
+    privacyPolicy.value = data.termsAndConditions;
+    restaurantEmail.value = data.contactEmail;
+    restaurantMobileNo.value = data.contactMobile;
     update();
   }
 }

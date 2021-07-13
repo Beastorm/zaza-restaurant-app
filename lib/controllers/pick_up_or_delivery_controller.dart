@@ -23,4 +23,12 @@ class PickUpOrDeliveryController extends GetxController {
     bottomTxt.value = "Next";
     update();
   }
+
+  // bool moveToNextScreen() {
+  //   if (isPickUpSelected.value) {
+  //     return true;
+  //   }
+
+  //   if(){}
+  // }
 }

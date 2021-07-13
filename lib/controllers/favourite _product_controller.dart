@@ -6,6 +6,7 @@ import '../repo/fav_repo.dart';
 
 class FavouriteController extends GetxController {
   var favouriteList = List<Datum>().obs;
+  final pref = GetStorage();
 
   @override
   void onInit() {
@@ -15,35 +16,27 @@ class FavouriteController extends GetxController {
   }
 
   requestForAllFavList() async {
-    final pref = GetStorage();
     if (pref.hasData("userId")) {
       List<Datum> favList = await getFavList(pref.read("userId"));
-      print(".........");
-      print(favouriteList?.length);
-      print(favouriteList);
-      print(".........");
+
       if (favList != null) {
+        if (favList.length == 0) {
+          return;
+        }
         favouriteList.assignAll(favList);
-      } else if (favList.length == 0) {
+      } else {
         favouriteList.clear();
-        Get.defaultDialog(
-          title: "Empty",
-          barrierDismissible: true,
-          middleText: "No food item in your favourite List",
-          radius: 4.0,
-        );
       }
     }
   }
 
   addProductFavList(String productId) async {
-    final pref = GetStorage();
     print(pref.read("userId"));
 
     if (pref.hasData("userId")) {
       var status = await addToFav(productId, pref.read<String>("userId"));
       if (status) {
-        requestForAllFavList();
+        await requestForAllFavList();
         Get.snackbar("Added In Favourite", "",
             snackPosition: SnackPosition.BOTTOM);
       } else
@@ -52,20 +45,22 @@ class FavouriteController extends GetxController {
   }
 
   Future<bool> delFromFavList(String tableId) async {
-    bool status = false;
-    final pref = GetStorage();
+    bool status;
+
     print(pref.read("userId"));
 
     if (pref.hasData("userId")) {
-      var status = await delFromFav(tableId);
+      status = await delFromFav(tableId);
       if (status) {
-        requestForAllFavList();
+        await requestForAllFavList();
         favouriteList.refresh();
         Get.snackbar("Deleted From Favourite", "",
             snackPosition: SnackPosition.BOTTOM);
         status = true;
-      } else
+      } else {
+        favouriteList.clear();
         Get.snackbar("Error", "", snackPosition: SnackPosition.BOTTOM);
+      }
     }
     return status;
   }

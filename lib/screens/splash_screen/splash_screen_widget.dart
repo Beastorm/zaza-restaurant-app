@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:zaza/controllers/app_info_controller.dart';
 
 import '../../common_components/logo_widget.dart';
 import '../../contants.dart';
@@ -13,6 +14,8 @@ class SplashScreen extends StatelessWidget {
   SplashScreen({Key key}) : super(key: key);
   final RestaurantInfoController restaurantInfoController =
       Get.put(RestaurantInfoController());
+
+  final AppInfoController _appInfoController = Get.put(AppInfoController());
 
   @override
   Widget build(BuildContext context) {
@@ -69,14 +72,14 @@ class SplashScreen extends StatelessWidget {
                     height: 18,
                   ),
                   SvgPicture.asset("assets/images/support.svg"),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: Text(
-                      "Call on: +1-4644545454",
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
-                    ),
-                  ),
+                  Obx(() => Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Text(
+                          "Call us: ${_appInfoController.restaurantMobileNo.value}",
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
+                      )),
                   SizedBox(
                     height: 12,
                   ),
@@ -89,40 +92,42 @@ class SplashScreen extends StatelessWidget {
               width: 36.0,
               right: 0,
               top: 88,
-              child: Container(
-                alignment: Alignment.center,
-                child: RotatedBox(
-                  quarterTurns: 3,
-                  child: Text(
-                    restaurantInfoController.isRestaurantOpenStatus.value ==
-                            true
-                        ? "Open"
-                        : "Closed",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-                decoration: BoxDecoration(
-                  color:
+              child: Obx(
+                () => Container(
+                  alignment: Alignment.center,
+                  child: RotatedBox(
+                    quarterTurns: 3,
+                    child: Text(
                       restaurantInfoController.isRestaurantOpenStatus.value ==
                               true
-                          ? Colors.green
-                          : secondaryColor,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(16),
-                    bottomLeft: Radius.circular(16),
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.3),
-                      spreadRadius: 1,
-                      blurRadius: 2,
-                      offset: Offset(0, 0), // changes position of shadow
+                          ? "Open"
+                          : "Closed",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ],
+                  ),
+                  decoration: BoxDecoration(
+                    color:
+                        restaurantInfoController.isRestaurantOpenStatus.value ==
+                                true
+                            ? Colors.green
+                            : secondaryColor,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(16),
+                      bottomLeft: Radius.circular(16),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.3),
+                        spreadRadius: 1,
+                        blurRadius: 2,
+                        offset: Offset(0, 0), // changes position of shadow
+                      ),
+                    ],
+                  ),
                 ),
               ),
             )

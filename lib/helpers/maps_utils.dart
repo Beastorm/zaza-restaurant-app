@@ -3,26 +3,76 @@ import 'dart:convert';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:http/http.dart' as http;
 import 'package:location/location.dart';
+import 'package:zaza/models/address.dart';
+import 'package:zaza/models/address_model.dart';
 
-Future<String> getAddressName(LocationData location, String apiKey) async {
+Future<Address> getAddressName(LocationData location, String apiKey) async {
+  String city, state, country, zipCode;
   try {
     var endPoint =
-        'https://maps.googleapis.com/maps/api/geocode/json?latlng=${location
-        ?.latitude},${location?.longitude}&key=$apiKey';
-    var response = jsonDecode((await http.post(
-      endPoint,
-    ))
-        .body);
+        'https://maps.googleapis.com/maps/api/geocode/json?latlng=${location?.latitude},${location?.longitude}&key=$apiKey';
+    // var response = jsonDecode((await http.post(
+    //   endPoint,
+    // ))
+    //     .body);
 
-    // getPostalCode(response['results'][0]['address_components'].las);
-    return response['results'][0]['formatted_address'];
+    var response = await http.post(endPoint);
+
+    AddressModel addressModel = addressModelFromJson(response.body);
+
+    List<AddressComponent> addressComponents =
+        addressModel.results[0].addressComponents;
+
+    for (var i in addressComponents) {
+      for (var j in i.types) {
+        if (j == "country") {
+          country = i.longName;
+        }
+
+        if (j == "administrative_area_level_1") {
+          state = i.longName;
+        }
+
+        if (j == "locality") {
+          city = i.longName;
+        }
+
+        if (j == "postal_code") {
+          city = i.longName;
+        }
+      }
+    }
+
+    var address = Address(
+        cityName: city,
+        stateName: state,
+        fullAddress: addressModel.results[0].formattedAddress,
+        zipCode: zipCode,
+        countryName: country);
+
+    return address;
   } catch (e) {
     print(e);
     return null;
   }
 }
 
-Future<String> getUserCurrentAddress() async {
+Future<Locatione> getLatLng(String address) async {
+   final String key = '${GlobalConfiguration().getValue('api_key')}';
+  String endPoint =
+      "https://maps.googleapis.com/maps/api/geocode/json?address=$address&key=$key";
+
+  var response = await http.post(endPoint);
+
+  if (response.statusCode == 200) {
+    AddressModel addressModel = addressModelFromJson(response.body);
+    return addressModel.results[0].geometry.location;
+  }
+
+  return null;
+}
+
+Future<Address> getUserCurrentAddress() async {
   final String key = '${GlobalConfiguration().getValue('api_key')}';
   Location location = new Location();
 
@@ -54,11 +104,18 @@ String getPostalCode(String address) {
   var list = address.split(", ");
   var pinInfo = list.elementAt(list.length - 2);
 
-  print(pinInfo
-      .split(" ")
-      .last);
+  print(pinInfo.split(" ").last);
 
-  return pinInfo
-      .split(" ")
-      .last;
+  return pinInfo.split(" ").last;
 }
+
+getCityName(String address) {
+  var list = address.split(", ");
+  var cityInfo = list.elementAt(list.length - 2);
+}
+
+getCountryName(String address) {
+  return address.split(",").toList().last;
+}
+
+getStateName(String address) {}

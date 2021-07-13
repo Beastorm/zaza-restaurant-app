@@ -11,6 +11,7 @@ class CartController extends GetxController {
   var cartList = List<Datum>().obs;
   TextEditingController zipController;
   var shippingAddress = "".obs;
+
   var isCurrentAddressUsed = false.obs;
   var mobileNo = "".obs;
 
@@ -29,31 +30,26 @@ class CartController extends GetxController {
     if (pref.hasData("userId")) {
       List<Datum> cartProducts = await getCartList(pref.read("userId"));
 
-      print(" cartcartcartcartcartcartcartcartcartcartcartcart");
+      // print(" cartcartcartcartcartcartcartcartcartcartcartcart");
 
       print(cartProducts);
-      print(" cartcartcartcartcartcartcartcartcartcartcartcart");
+      // print(" cartcartcartcartcartcartcartcartcartcartcartcart");
       if (cartProducts != null) {
         cartList.assignAll(cartProducts);
       } else {
         cartList.clear();
-        Get.defaultDialog(
-          title: "No Data",
-          barrierDismissible: true,
-          middleText: "No food item in your Cart List",
-          radius: 4.0,
-        );
       }
     }
   }
 
-  addProductInCartList(String productId, String qty, String cost) async {
+  addProductInCartList(
+      String productId, String qty, String cost, String preference) async {
     final pref = GetStorage();
     print(pref.read("userId"));
 
     if (pref.hasData("userId")) {
-      var status =
-          await addToCart(productId, pref.read<String>("userId"), qty, cost);
+      var status = await addToCart(
+          productId, pref.read<String>("userId"), qty, cost, preference);
       if (status) {
         getAllCartItem();
         Get.snackbar("Added In Cart", "", snackPosition: SnackPosition.BOTTOM);
@@ -82,7 +78,7 @@ class CartController extends GetxController {
   }
 
   updateUserCart(String tableId, String qty, String dicountedPriceOfItem) {
-    print("..................update....................");
+    // print("..................update....................");/
     updateCart(tableId, qty, dicountedPriceOfItem);
   }
 
@@ -102,7 +98,7 @@ class CartController extends GetxController {
 // maximum allowed value for qty of product is 99 and min  is 1
 
   incrementQty(int index) {
-    print("..................incremnet....................");
+    // print("..................incremnet....................");
     print(cartList.elementAt(index).qty);
     String quantity = (int.parse(cartList.elementAt(index).qty)) < 100
         ? ((int.parse(cartList.elementAt(index).qty) + 1).toString())
@@ -141,7 +137,7 @@ class CartController extends GetxController {
   getCurrentUserAddress() async {
     var address = await getUserCurrentAddress();
     if (address != null) {
-      shippingAddress.value = address.toString();
+      shippingAddress.value = address.fullAddress;
       isCurrentAddressUsed.value = true;
 
       print(shippingAddress.value);
@@ -151,7 +147,7 @@ class CartController extends GetxController {
 
 //SAVING CURRENT USER ADDRESS FROM GOOGLE MAP API
   saveUserAddress() async {
-    print("sahgsdhghgdsh....................");
+    // print("sahgsdhghgdsh....................");
     final pref = GetStorage();
 
     await savedUserAddress(pref.read("userId"), shippingAddress.value,
@@ -175,5 +171,15 @@ class CartController extends GetxController {
       mobileNo.value = data.personal.mobile;
       update();
     }
+  }
+
+  String getCartProductIdInStrigFormat() {
+    List<String> list = cartList.map((element) => element.id).toList();
+    return list.join(",");
+  }
+
+  String getCartParodutQtyInStringFormat() {
+    List<String> list = cartList.map((element) => element.qty).toList();
+    return list.join(",");
   }
 }

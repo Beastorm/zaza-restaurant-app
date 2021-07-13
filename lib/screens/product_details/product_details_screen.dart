@@ -6,6 +6,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:zaza/contants.dart';
 import 'package:zaza/controllers/cart_controller.dart';
 import 'package:zaza/controllers/favourite%20_product_controller.dart';
+import 'package:zaza/controllers/product_details_controller.dart';
 import 'package:zaza/controllers/products_controller.dart';
 import 'package:zaza/models/products_model.dart';
 import 'package:zaza/utlities/text_captitalize.dart';
@@ -25,16 +26,15 @@ class _ProductDetailsScreenWidgetState
     extends State<ProductDetailsScreenWidget> {
   final FavouriteController favouriteController =
       Get.put(FavouriteController());
+
   final CartController cartController = Get.put(CartController());
+
   final ProductController productController = Get.put(ProductController());
 
-  final pref = GetStorage();
+  final ProductDetailsController productDetailsController =
+      Get.put(ProductDetailsController());
 
-  @override
-  void initState() {
-    productController.getProducts(widget.productItem.category);
-    super.initState();
-  }
+  final pref = GetStorage();
 
   @override
   Widget build(BuildContext context) {
@@ -42,11 +42,7 @@ class _ProductDetailsScreenWidgetState
       child: Scaffold(
         bottomNavigationBar: GestureDetector(
           onTap: () {
-            cartController.addProductInCartList(
-                widget.productItem.id,
-                "1",
-                cartController.getFoodCost(
-                    widget.productItem.price, widget.productItem.discount));
+            askForNote(context, productDetailsController);
           },
           child: Container(
             alignment: Alignment.center,
@@ -92,7 +88,7 @@ class _ProductDetailsScreenWidgetState
             style: TextStyle(
                 color: Colors.white.withOpacity(0.9),
                 fontWeight: FontWeight.w400,
-                fontSize: 18.0),
+                fontSize: 16.0),
           ),
           backgroundColor: secondaryColor,
           actions: [
@@ -166,7 +162,8 @@ class _ProductDetailsScreenWidgetState
                                   top: 12.0,
                                   right: 12.0,
                                   child: CircleAvatar(
-                                    backgroundColor: Colors.white,
+                                    backgroundColor:
+                                        secondaryColor.withOpacity(0.2),
                                     child: IconButton(
                                       icon: Icon(
                                         Icons.bookmark_border_outlined,
@@ -343,25 +340,265 @@ class _ProductDetailsScreenWidgetState
                   ),
                   Padding(
                     padding: const EdgeInsets.only(
-                        top: 32.0, left: 16.0, bottom: 24.0),
+                      top: 32.0,
+                      left: 16.0,
+                    ),
+                    child: Row(
+                      children: [
+                        Text(
+                          "Combo Offer",
+                          style: TextStyle(
+                              fontSize: 18.0, fontWeight: FontWeight.w500),
+                        ),
+                        Spacer(),
+                        Obx(() => Container(
+                              child: productDetailsController
+                                          .currentComboProduct.value !=
+                                      "0"
+                                  ? RaisedButton(
+                                      elevation: 0.0,
+                                      color: Colors.transparent,
+                                      child: Text(
+                                        "Reset",
+                                        style: TextStyle(color: accentColor),
+                                      ),
+                                      onPressed: () {
+                                        productDetailsController
+                                            .currentComboProduct.value = "0";
+                                      },
+                                    )
+                                  : SizedBox(),
+                            ))
+                      ],
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Container(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 2),
+                        child: Text(
+                          "Get sandwich with it at only \$2.49",
+                          style: TextStyle(color: Colors.grey, fontSize: 14.0),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 24.0,
+                  ),
+                  LimitedBox(
+                    maxHeight: 100000,
+                    child: GetX<ProductDetailsController>(
+                      initState: (_) {
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          productDetailsController.getProducts("26");
+                        });
+                      },
+                      builder: (controller) {
+                        return ListView.builder(
+                          itemCount: controller.productList.length > 0
+                              ? controller.productList.length
+                              : 0,
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemBuilder: (BuildContext context, int index) {
+                            return GestureDetector(
+                              onTap: () {
+                                Get.to(
+                                    ProductDetailsScreenWidget(
+                                      productItem:
+                                          controller.productList[index],
+                                    ),
+                                    preventDuplicates: false);
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(bottom: 8.0),
+                                child: Container(
+                                  child: Row(
+                                    children: [
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 90),
+                                        child: Container(
+                                          color: controller.productList[index]
+                                                      .type ==
+                                                  "0"
+                                              ? Colors.green
+                                              : Colors.red,
+                                          width: 24,
+                                          height: 18,
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Container(
+                                          height: 120,
+                                          child: Row(
+                                            children: [
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                  child: CachedNetworkImage(
+                                                      width: 140,
+                                                      height: 120,
+                                                      fit: BoxFit.cover,
+                                                      imageUrl: controller
+                                                          .productList[index]
+                                                          .image),
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: Padding(
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      vertical: 12.0),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        controller
+                                                            .productList[index]
+                                                            .name,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        maxLines: 2,
+                                                        style: TextStyle(
+                                                            fontSize: 16.0),
+                                                      ),
+                                                      SizedBox(
+                                                        height: 8.0,
+                                                      ),
+                                                      Row(
+                                                        children: [
+                                                          Text(
+                                                            "\$2.49",
+                                                            style: TextStyle(
+                                                                fontSize: 16.0,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                          Spacer(),
+                                                          Obx(
+                                                            () => Container(
+                                                              child: IconButton(
+                                                                icon: productDetailsController
+                                                                            .currentComboProduct
+                                                                            .value ==
+                                                                        controller
+                                                                            .productList[index]
+                                                                            .id
+                                                                    ? Icon(
+                                                                        Icons
+                                                                            .check_box_rounded,
+                                                                        color: Colors
+                                                                            .greenAccent,
+                                                                      )
+                                                                    : Icon(
+                                                                        Icons
+                                                                            .check_box_outline_blank_outlined,
+                                                                      ),
+                                                                onPressed: () {
+                                                                  productDetailsController
+                                                                          .currentComboProduct
+                                                                          .value =
+                                                                      controller
+                                                                          .productList[
+                                                                              index]
+                                                                          .id;
+
+                                                                  print(
+                                                                      ".................");
+                                                                  print(productDetailsController
+                                                                      .currentComboProduct
+                                                                      .value);
+                                                                },
+                                                              ),
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
+
+                                                      // Text(
+                                                      //   controller.productList[index]
+                                                      //               .discount !=
+                                                      //           "0"
+                                                      //       ? "${controller.productList[index].discount}% OFF"
+                                                      //       : "",
+                                                      //   style: TextStyle(
+                                                      //       color: Colors.orange,
+                                                      //       fontSize: 16.0,
+                                                      //       fontWeight:
+                                                      //           FontWeight.normal),
+                                                      // ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white.withAlpha(210),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(8.0)),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.grey
+                                                    .withOpacity(0.3),
+                                                spreadRadius: 1,
+                                                blurRadius: 2,
+                                                offset: Offset(0,
+                                                    0), // changes position of shadow
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 12.0,
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        top: 40.0, left: 16.0, bottom: 16.0),
                     child: Text(
                       "Similar Food Items",
                       style: TextStyle(
                           fontSize: 18.0, fontWeight: FontWeight.w500),
                     ),
                   ),
-                  LimitedBox(
-                    maxHeight: 1200000,
+                  SizedBox(
+                    height: 140,
                     child: GetX<ProductController>(
+                      initState: (_) {
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          productController
+                              .getProducts(widget.productItem.category);
+                        });
+                      },
                       builder: (controller) => controller.isLoading.value
                           ? Center(child: CircularProgressIndicator())
                           : ListView.builder(
-                              shrinkWrap: true,
-                              scrollDirection: Axis.vertical,
+                              scrollDirection: Axis.horizontal,
                               itemCount: controller.productList.length > 0
                                   ? controller.productList.length
                                   : 0,
-                              physics: NeverScrollableScrollPhysics(),
                               itemBuilder: (context, index) {
                                 return GestureDetector(
                                   onTap: () {
@@ -376,8 +613,9 @@ class _ProductDetailsScreenWidgetState
                                     );
                                   },
                                   child: Padding(
-                                    padding: const EdgeInsets.only(bottom: 8.0),
+                                    padding: const EdgeInsets.only(right: 16.0),
                                     child: Container(
+                                      width: 320,
                                       child: Row(
                                         children: [
                                           Padding(
@@ -390,13 +628,13 @@ class _ProductDetailsScreenWidgetState
                                                       "0"
                                                   ? Colors.green
                                                   : Colors.red,
-                                              width: 32,
+                                              width: 24,
                                               height: 18,
                                             ),
                                           ),
                                           Expanded(
                                             child: Container(
-                                              height: 120,
+                                              height: 130,
                                               child: Row(
                                                 children: [
                                                   Padding(
@@ -408,8 +646,8 @@ class _ProductDetailsScreenWidgetState
                                                           BorderRadius.circular(
                                                               8),
                                                       child: CachedNetworkImage(
-                                                          width: 140,
-                                                          height: 120,
+                                                          width: 120,
+                                                          height: 130,
                                                           fit: BoxFit.cover,
                                                           imageUrl: controller
                                                               .productList[
@@ -435,9 +673,9 @@ class _ProductDetailsScreenWidgetState
                                                             overflow:
                                                                 TextOverflow
                                                                     .ellipsis,
-                                                            maxLines: 2,
+                                                            maxLines: 3,
                                                             style: TextStyle(
-                                                                fontSize: 16.0),
+                                                                fontSize: 15.0),
                                                           ),
                                                           SizedBox(
                                                             height: 8.0,
@@ -501,6 +739,9 @@ class _ProductDetailsScreenWidgetState
                               },
                             ),
                     ),
+                  ),
+                  SizedBox(
+                    height: 48.0,
                   )
                 ],
               ),
@@ -509,5 +750,125 @@ class _ProductDetailsScreenWidgetState
         ),
       ),
     );
+  }
+
+  askForNote(
+      BuildContext context, ProductDetailsController productDetailsController) {
+    showModalBottomSheet(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(4.0),
+          ),
+        ),
+        backgroundColor: Colors.white,
+        context: context,
+        isScrollControlled: true,
+        builder: (context) => Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 18),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12.0, vertical: 16.0),
+                    child: Text('Please add your preference,if you have any',
+                        style: TextStyle(color: Colors.grey)),
+                  ),
+                  SizedBox(
+                    height: 8.0,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                        bottom: MediaQuery.of(context).viewInsets.bottom),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12.0, vertical: 16.0),
+                          child: TextField(
+                            keyboardType: TextInputType.multiline,
+                            maxLines: 3,
+                            decoration: InputDecoration(hintText: 'Note:'),
+                            //  autofocus: true,
+                            controller: productDetailsController.noteController,
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        Row(
+                          children: [
+                            Spacer(),
+                            RaisedButton(
+                              elevation: 0.0,
+                              color: Colors.transparent,
+                              onPressed: () {
+                                // for adding normal product in cart
+                                cartController.addProductInCartList(
+                                    widget.productItem.id,
+                                    "1",
+                                    cartController.getFoodCost(
+                                        widget.productItem.price,
+                                        widget.productItem.discount),
+                                    productDetailsController
+                                        .noteController.text);
+
+                                // for adding  combo product in cart
+
+                                if (productDetailsController
+                                        .currentComboProduct.value !=
+                                    "0") {
+                                  cartController.addProductInCartList(
+                                      productDetailsController
+                                          .currentComboProduct.value,
+                                      "1",
+                                      "2.49",
+                                      "");
+                                }
+
+                                Get.back();
+                              },
+                              child: Text(
+                                "Continue",
+                                style: TextStyle(color: accentColor),
+                              ),
+                            ),
+                            SizedBox(width: 12),
+                            RaisedButton(
+                              elevation: 0.0,
+                              color: Colors.transparent,
+                              onPressed: () {
+                                cartController.addProductInCartList(
+                                    widget.productItem.id,
+                                    "1",
+                                    cartController.getFoodCost(
+                                        widget.productItem.price,
+                                        widget.productItem.discount),
+                                    productDetailsController
+                                        .noteController.text);
+
+                                if (productDetailsController
+                                        .currentComboProduct.value !=
+                                    "0") {
+                                  cartController.addProductInCartList(
+                                      productDetailsController
+                                          .currentComboProduct.value,
+                                      "1",
+                                      "2.49",
+                                      "");
+                                }
+
+                                Get.back();
+                              },
+                              child: Text("Skip",
+                                  style: TextStyle(color: accentColor)),
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ));
   }
 }
