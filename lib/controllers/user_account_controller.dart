@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
-
 import '../models/user_account_model.dart';
 import '../repo/user_account_rep.dart';
 
 class UserProfileController extends GetxController {
+
   UserData data;
   var address = List<Address>().obs;
   var file = File("").obs;
@@ -19,7 +19,6 @@ class UserProfileController extends GetxController {
   TextEditingController firstLineController,
       secondLineController,
       pinController;
-
   @override
   void onInit() {
     requestForUserAccount();

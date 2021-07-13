@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import '../search_items/search_item.dart';
 
 import '../../contants.dart';
 import '../../controllers/home_controller.dart';
@@ -13,6 +12,7 @@ import '../../utlities/text_captitalize.dart';
 import '../not_login_screen.dart';
 import '../product_details/product_details_screen.dart';
 import '../products_screen/product_screen.dart';
+import '../search_items/search_item.dart';
 
 class HomeScreenWidget extends StatefulWidget {
   final GlobalKey<ScaffoldState> parentScaffoldKey;
@@ -54,7 +54,7 @@ class _HomeScreenWidgetState extends State<HomeScreenWidget> {
                         GestureDetector(
                           onTap: () {
                             Get.to(SearchFoodItemScreenWidget());
-                           },
+                          },
                           child: Container(
                             height: 48.0,
                             child: Row(
